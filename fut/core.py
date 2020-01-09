@@ -370,22 +370,10 @@ class Core(object):
 
             # click button to send code
             if 'Login Verification' in rc.text:  # click button to get code sent
-                if totp:
-                    rc = self.r.post(rc.url, {'_eventId': 'submit', 'codeType': 'APP'})
-                    code = pyotp.TOTP(totp).now()
-                elif sms:
-                    rc = self.r.post(rc.url, {'_eventId': 'submit', 'codeType': 'SMS'})
-                else:  # email
-                    rc = self.r.post(rc.url, {'_eventId': 'submit', 'codeType': 'EMAIL'})
+                rc = self.r.post(rc.url, {'_eventId': 'submit', 'codeType': 'EMAIL'})
 
             # if 'We sent a security code to your' in rc.text or 'Your security code was sent to' in rc.text or 'Enter the 6-digit verification code' in rc.text or 'We have sent a security code' in rc.text:  # post code
             if 'Enter your security code' in rc.text:
-                # TODO: 'We sent a security code to your email' / 'We sent a security code to your ?'
-                # TODO: pick code from codes.txt?
-                if not code:
-                    # self.saveSession()
-                    # raise FutError(reason='Error during login process - code is required.')
-                    code = input('Enter code: ')
                 self.r.headers['Referer'] = url = rc.url
                 # self.r.headers['Upgrade-Insecure-Requests'] = '1'  # ?
                 # self.r.headers['Origin'] = 'https://signin.ea.com'
